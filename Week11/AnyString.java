@@ -2,7 +2,7 @@
 // Assignment 9
 // CPT-236-S44
 // Fall 2021
-// An object with two constructors
+// An application that demonstrates overloading constructors
 import java.util.Scanner;
 
 public class AnyString {
@@ -21,12 +21,16 @@ public class AnyString {
     public static void main(String[] args){
         //basic test of AnyString class
         Scanner input = new Scanner(System.in);
+        //QOL feature for making sure input is collecting correctly
         input.useDelimiter(System.lineSeparator());
         System.out.print("Enter a string to test:");
         String simpleInput = input.next();
+        // create object with string input
         AnyString sampleAnyString = new AnyString(simpleInput);
+
+        //calling all methods
         System.out.println("Our input: " + sampleAnyString.toString());
-        AnyString secondAnyString = new AnyString("test");
+        AnyString secondAnyString = new AnyString("test"); //creating another object to have something to compare to
         System.out.println("Is our input equal to \"" + secondAnyString + "\": " + sampleAnyString.equals(secondAnyString));
         System.out.println("Does our input only contain letters: " + sampleAnyString.isLetters());
         System.out.println("Dour our input only contain numbers: " + sampleAnyString.isNumeric());
@@ -39,6 +43,8 @@ public class AnyString {
         System.out.println("----------------------------");
         char[] simpleInputA = {'t','e','s','t'};
         AnyString sampleAnyStringA = new AnyString(simpleInputA);
+
+        //calling all methods
         System.out.println("Our character array input is: " + sampleAnyStringA.toString());
         System.out.println("Checking if our character array input is equal to \"" + secondAnyString + "\": " + sampleAnyStringA.equals(secondAnyString));
         System.out.println("Does our input character array input only contain letters: " + sampleAnyStringA.isLetters());
@@ -91,6 +97,7 @@ public class AnyString {
         }
         return true;
     }
+    //basic getters and manipulation
     public String getString(){
         return this.storedStringValue;
     }
