@@ -33,7 +33,7 @@ public class EncryptString extends AnyString {
         System.out.println("Does our input only contain numbers: " + encryptedStringFromInput.isNumeric());
         System.out.println("Our input encrypted is: " + encryptedStringFromInput.encryptString());
         //can also call decryptString() to decrypt the currently stored string
-        System.out.println("Our input decrypted is: " + decryptString(encryptedStringFromInput.encryptString()));
+        System.out.println("Encrypted input decrypted is: " + decryptString(encryptedStringFromInput.encryptString()));
         System.out.println("Lowercase: " + encryptedStringFromInput.lowercase());
         System.out.println("Uppercase: " + encryptedStringFromInput.uppercase());
         System.out.println("Length: " + encryptedStringFromInput.getLength());
@@ -49,7 +49,7 @@ public class EncryptString extends AnyString {
         System.out.println("Does our input character array input only contain letters: " + encryptedStringFromCharArray.isLetters());
         System.out.println("Does our input character array input only contain numbers: " + encryptedStringFromCharArray.isNumeric());
         System.out.println("Our input encrypted is: " + encryptedStringFromCharArray.encryptString());
-        System.out.println("Our input decrypted is: " + decryptString(encryptedStringFromCharArray.encryptString()));
+        System.out.println("Encrypted input decrypted is: " + decryptString(encryptedStringFromCharArray.encryptString()));
         System.out.println("Lowercase: " + encryptedStringFromCharArray.lowercase());
         System.out.println("Uppercase: " + encryptedStringFromCharArray.uppercase());
         System.out.println("Length: " + encryptedStringFromCharArray.getLength());
