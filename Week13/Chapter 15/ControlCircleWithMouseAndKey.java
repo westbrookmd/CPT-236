@@ -36,7 +36,7 @@ public class ControlCircleWithMouseAndKey extends Application {
     primaryStage.setTitle("ControlCircle"); // Set the stage title
     primaryStage.setScene(scene); // Place the scene in the stage
     primaryStage.show(); // Display the stage
-    
+
     circlePane.setOnMouseClicked(e -> {
       if (e.getButton() == MouseButton.PRIMARY) {
         circlePane.enlarge();
@@ -46,7 +46,7 @@ public class ControlCircleWithMouseAndKey extends Application {
       }
     });
     
-    scene.setOnKeyPressed(e -> {
+    btEnlarge.setOnKeyPressed(e -> {
       if (e.getCode() == KeyCode.UP) {
         circlePane.enlarge();
       }
