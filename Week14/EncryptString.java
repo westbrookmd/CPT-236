@@ -139,7 +139,7 @@ public class EncryptString extends AnyString {
         stringToDecrypt = decryptString(stringToDecrypt);
         return stringToDecrypt;
     }
-    private static String decryptString(String stringToDecrypt){
+    public static String decryptString(String stringToDecrypt){
         //creating general way to decrypt any string
         StringBuilder decryptedString = new StringBuilder();
         for (int i = 0; i < stringToDecrypt.length(); ++i)

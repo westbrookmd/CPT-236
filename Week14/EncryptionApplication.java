@@ -1,17 +1,14 @@
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-
-import java.util.Locale;
 
 public class EncryptionApplication extends Application {
     @Override // Override the start method in the Application class
@@ -45,6 +42,7 @@ public class EncryptionApplication extends Application {
         gridPane.add(flowPane, 0, 2);
         gridPane.add(new Label("Output Text"), 0, 3);
         TextArea txtOutput = new TextArea("Output text here");
+        txtOutput.setEditable(false); //make it so users can't type into the output box, but can copy it
         gridPane.add(txtOutput, 0, 4);
 
         // Create a scene of the GridPane and place it in the stage
@@ -57,17 +55,17 @@ public class EncryptionApplication extends Application {
         btEncrypt.setOnMouseClicked(e -> {
             //get the input text
             String textToEncrypt = txtInput.getText();
-            //using the static method to encrypt strings so that we don't have to create an object
+            //using the static method to encrypt the string so that we don't have to create an object
             String encryptedText = EncryptString.encryptString(textToEncrypt);
-            txtOutput.setText(encryptedText);});
-        btClear.setOnMouseClicked(e -> {
-            txtInput.clear();});
+            txtOutput.setText(encryptedText);
+        });
+        btClear.setOnMouseClicked(e -> txtInput.clear());
         btDecrypt.setOnMouseClicked(e -> {
             String textToDecrypt = txtInput.getText();
-            //don't have a static decryption method
-            //TODO: create a static decryption method
-            EncryptString decryptedText = new EncryptString(textToDecrypt);
-            txtOutput.setText(decryptedText.decryptString());});
+            //using the static method to decrypt the string so that we don't have to create an object
+            String decryptedText = EncryptString.decryptString(textToDecrypt);
+            txtOutput.setText(decryptedText);
+        });
     }
 
 }
