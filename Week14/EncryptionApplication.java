@@ -40,11 +40,11 @@ public class EncryptionApplication extends Application {
 
         // Placing the flowpane and nodes in the gridPane
         gridPane.add(new Label("Input Text:"), 0, 0);
-        TextArea txtInput = new TextArea();
+        TextArea txtInput = new TextArea("Input text here");
         gridPane.add(txtInput, 0, 1);
         gridPane.add(flowPane, 0, 2);
         gridPane.add(new Label("Output Text"), 0, 3);
-        TextArea txtOutput = new TextArea();
+        TextArea txtOutput = new TextArea("Output text here");
         gridPane.add(txtOutput, 0, 4);
 
         // Create a scene of the GridPane and place it in the stage
@@ -55,13 +55,17 @@ public class EncryptionApplication extends Application {
 
         //create event handlers
         btEncrypt.setOnMouseClicked(e -> {
+            //get the input text
             String textToEncrypt = txtInput.getText();
-            EncryptString encryptedText = new EncryptString(textToEncrypt);
-            txtOutput.setText(encryptedText.encryptString());});
+            //using the static method to encrypt strings so that we don't have to create an object
+            String encryptedText = EncryptString.encryptString(textToEncrypt);
+            txtOutput.setText(encryptedText);});
         btClear.setOnMouseClicked(e -> {
             txtInput.clear();});
         btDecrypt.setOnMouseClicked(e -> {
             String textToDecrypt = txtInput.getText();
+            //don't have a static decryption method
+            //TODO: create a static decryption method
             EncryptString decryptedText = new EncryptString(textToDecrypt);
             txtOutput.setText(decryptedText.decryptString());});
     }
