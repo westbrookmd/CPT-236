@@ -7,9 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-public class ShowGridPane extends Application {
+public class EncryptionApplication extends Application {
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
     // Create a gridPane and set its properties
@@ -22,17 +23,17 @@ public class ShowGridPane extends Application {
     FlowPane flowPane = new FlowPane();
     flowPane.setAlignment(Pos.CENTER);
     flowPane.setPadding(new Insets(10, 10, 10, 10));
-    flowPane.setVgap(5);
+    flowPane.setHgap(5);
 
     // Create buttons and adding to the flowpane
-    //TODO: might have to add flowPane.getchildren().addAll(list nodes)
     Button btEncrypt = new Button("Encrypt");
     flowPane.add(btEncrypt);
     Button btClear = new Button("Clear");
     flowPane.add(btClear);
     Button btDecrypt = new Button("Decrypt");
     flowPane.add(btDecrypt);
-    //flowPane.getChildren().addAll(btEncrypt, btClear, btDecrypt);
+    //The book's way of adding nodes to a flowpane
+    //flowPane.getChildren().addAll(btEncrypt, btClear, btDecrypt); 
 
     // Placing the flowpane and nodes in the gridPane
     gridPane.add(new Label("Input Text:"), 0, 0);
@@ -43,7 +44,7 @@ public class ShowGridPane extends Application {
 
     // Create a scene of the GridPane and place it in the stage
     Scene scene = new Scene(gridPane);
-    primaryStage.setTitle("ShowGridPane"); // Set the stage title
+    primaryStage.setTitle("CPT 236 Encryption Application"); // Set the stage title
     primaryStage.setScene(scene); // Place the scene in the stage
     primaryStage.show(); // Display the stage
     }
