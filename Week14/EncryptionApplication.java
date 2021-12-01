@@ -15,7 +15,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 //TODO:add i/o import & JFileChooser import
 
 public class EncryptionApplication extends Application {
@@ -23,14 +31,14 @@ public class EncryptionApplication extends Application {
     public void start(Stage primaryStage) {
         //create a menu, add it to the main pane -> everything else is stored within the gridpane 
         //(including the flowpane)
-        Pane mainPane = new Pane();
+        FlowPane mainPane = new FlowPane();
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
         MenuItem menuItemLoad = new MenuItem("Load");
         MenuItem menuItemSave = new MenuItem("Save");
         MenuItem menuItemExit = new MenuItem("Exit");
         menuFile.getItems().addAll(menuItemLoad, menuItemSave, menuItemExit);
-        menuBar.getChildren().addAll(menuFile);
+        menuBar.getMenus().addAll(menuFile);
         mainPane.getChildren().add(menuBar);
 
         // Create a gridPane and set its properties
@@ -76,34 +84,49 @@ public class EncryptionApplication extends Application {
 
         //create event handlers
         //TODO: save and load the shift value in addition to the input
-        menuItemLoad.setOnMouseClicked(e -> {
+        menuItemLoad.setOnAction(e -> {
             //do loading file here
             //input method (from example code in chapter 17.4)
             String selectedFile = getSelectedFile();
             if(!selectedFile.isBlank())
             {
-                FileInputStream file = new FileInputStream(selectedFile);
-                int text;
-                while((text = file.read()) != -1)
+                try
                 {
-                    txtInput.setText(txtInput.getText() + text);
+                    FileInputStream file = new FileInputStream(selectedFile);
+                    int text;
+                    while((text = file.read()) != -1)
+                    {
+                        String charToAdd = String.valueOf((char)text);
+                        txtInput.setText(txtInput.getText() + charToAdd);
+                    }
+                    file.close();
                 }
-                file.close();
+                catch(Exception ex)
+                {
+                }
             }  
         });
-        menuItemSave.setOnMouseClicked(e -> {
+        menuItemSave.setOnAction(e -> {
             //do saving file here
             String selectedFile = getSelectedFile();
-            if(!selectedFile.isBlank())
+            try
             {
-                FileOutputStream file = new FileOutputStream(selectedFile);
-                String text = txtInput.getText();
-                file.write(text);
-                file.close();
+                if(!selectedFile.isBlank())
+                {
+                    FileOutputStream file = new FileOutputStream(selectedFile);
+                    String outputText = txtInput.getText();
+                    file.write(outputText.getBytes(StandardCharsets.UTF_8));
+                    file.close();
+                }
+            }
+
+            catch(Exception ex)
+            {
+
             }
         });
-        menuItemExit.setOnMouseClicked(e -> {
-            System.exit();
+        menuItemExit.setOnAction(e -> {
+            System.exit(0);
         });
 
         btEncrypt.setOnMouseClicked(e -> {
@@ -166,7 +189,7 @@ public class EncryptionApplication extends Application {
             case "FILE":
                 alert.setTitle("Check File Selected");
                 alert.setHeaderText("File Not Selected Properly");
-                alert.setContentText("File selection instructions.");//TODO: add file instructions
+                alert.setContentText("File selection issue. Select a file with text only.");//TODO: find reasons for file selection errors
                 alert.showAndWait();
                 break;
             default:
@@ -199,12 +222,13 @@ public class EncryptionApplication extends Application {
         try
         {
             JFileChooser file = new JFileChooser();
-            FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(
-                "Text Files Only", "txt");
-            chooser.setFileFilter(txtFilter);
-            int returnVal = chooser.showOpenDialog(null);
+            int returnVal = file.showOpenDialog(null);
             if(returnVal == JFileChooser.APPROVE_OPTION) {
-                selectedFile = chooser.getSelectedFile().getAbsolutePath();
+                selectedFile = file.getSelectedFile().getAbsolutePath();
+            }
+            else
+            {
+                displayAlert("FILE");
             }
         }
         catch(Exception e)
