@@ -165,14 +165,21 @@ public class EncryptionApplication extends Application {
     {
         //https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java/40255184
         String selectedFile = "";
-        JFileChooser file = new JFileChooser();
-        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(
-            "Text Files Only", "txt");
-        chooser.setFileFilter(txtFilter);
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            selectedFile = chooser.getSelectedFile().getName());
+        try{
+            JFileChooser file = new JFileChooser();
+            FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(
+                "Text Files Only", "txt");
+            chooser.setFileFilter(txtFilter);
+            int returnVal = chooser.showOpenDialog(null);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                selectedFile = chooser.getSelectedFile().getAbsolutePath());
         }
+        catch(Exception e)
+        {
+            e.printStackTrace(System.out);
+        }
+        }
+        
         return selectedFile;
     }
 }
