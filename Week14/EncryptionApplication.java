@@ -1,5 +1,13 @@
 //TODO: add name
 
+//Marshall Westbrook
+//CPT236
+// An Application that can encrypt and decrypt letters by utilizing event handlers
+// BONUS: Added the option to use a shift value between 1-26
+// BONUS2: Added a menubar with I/O support. Currently loading/saving input
+// Could add shift value loading and saving later
+// BONUS3: Added error message handling and input validation (primarily for the shift value)
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,11 +16,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+//TODO:add i/o import & JFileChooser import
 
 public class EncryptionApplication extends Application {
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
-        //create a menu, add it to the main pane -> everything else is stored within the gridpane
+        //create a menu, add it to the main pane -> everything else is stored within the gridpane 
+        //(including the flowpane)
         Pane mainPane = new Pane();
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
@@ -23,10 +33,9 @@ public class EncryptionApplication extends Application {
         menuBar.getChildren().addAll(menuFile);
         mainPane.getChildren().add(menuBar);
 
-
         // Create a gridPane and set its properties
         GridPane gridPane = new GridPane();
-        //adding it to the main pane (with the menu)
+        //adding it to the main pane (with the menubar)
         mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -47,7 +56,7 @@ public class EncryptionApplication extends Application {
         Button btDecrypt = new Button("Decrypt");
         flowPane.getChildren().addAll(btEncrypt, txtShift, btClear, btDecrypt);
 
-        // Placing the flowpane and nodes in the gridPane
+        // Place the flowpane and nodes in the gridPane
         gridPane.add(new Label("Input Text:"), 0, 0);
         TextArea txtInput = new TextArea();
         txtInput.setPromptText("Input text here");
@@ -60,10 +69,10 @@ public class EncryptionApplication extends Application {
         gridPane.add(txtOutput, 0, 4);
 
         // Create a scene of the GridPane and place it in the stage
-        Scene scene = new Scene(gridPane);
-        primaryStage.setTitle("CPT 236 Encryption Application"); // Set the stage title
-        primaryStage.setScene(scene); // Place the scene in the stage
-        primaryStage.show(); // Display the stage
+        Scene scene = new Scene(mainPane);// this is to include the menubar without changing formatting
+        primaryStage.setTitle("CPT 236 Encryption Application"); 
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
         //create event handlers
         //TODO: save and load the shift value in addition to the input
@@ -114,7 +123,6 @@ public class EncryptionApplication extends Application {
             String output = decryptedText.decryptStringRandom(decryptedText.getString(), shift);
             txtOutput.setText(output);
         });
-        btclear.setOnMouseClicked(new )
     }
     private boolean checkIfValid(String shiftText)
     {
@@ -138,7 +146,6 @@ public class EncryptionApplication extends Application {
         }
         return isValid;
     }
-
     private void displayAlert(String value) {
         //create alert and explain the problem
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -170,8 +177,6 @@ public class EncryptionApplication extends Application {
                 break;
         } 
     }
-
-
     private int getShift(String shiftText)  //always calls checkIfValid
     {
         int shift = 1;
@@ -186,10 +191,10 @@ public class EncryptionApplication extends Application {
         }
         return shift;
     }
-
     private String getSelectedFile()
     {
         //https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java/40255184
+        //I have used FileDialog before but wanted to try out JFileChooser
         String selectedFile = "";
         try
         {
