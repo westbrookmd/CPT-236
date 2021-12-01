@@ -10,8 +10,22 @@ import javafx.stage.Stage;
 public class EncryptionApplication extends Application {
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
+        //create a menu, add it to the main pane -> everything else is stored within the gridpane
+        Pane mainPane = new Pane();
+        MenuBar menuBar = new MenuBar();
+        Menu menuFile = new Menu("File");
+        MenuItem menuItemLoad = new MenuItem("Load");
+        MenuItem menuItemSave = new MenuItem("Save");
+        MenuItem menuItemExit = new MenuItem("Exit");
+        menuFile.getItems().addAll(menuItemLoad, menuItemSave, menuItemExit);
+        menuBar.getChildren().addAll(menuFile);
+        mainPane.getChildren().add(menuBar);
+
+
         // Create a gridPane and set its properties
         GridPane gridPane = new GridPane();
+        //adding it to the main pane (with the menu)
+        mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(5);
@@ -50,6 +64,36 @@ public class EncryptionApplication extends Application {
         primaryStage.show(); // Display the stage
 
         //create event handlers
+        menuItemLoad.setOnMouseClicked(e -> {
+            //do loading file here
+            //input method (from example code in chapter 17.4)
+            String selectedFile = getSelectedFile();
+            if(!selectedFile.isBlank())
+            {
+                FileInputStream file = new FileInputStream(selectedFile);
+                int text;
+                while((text = file.read()) != -1)
+                {
+                    txtInput.setText(txtInput.getText() + text);
+                }
+                file.close();
+            }  
+        });
+        menuItemSave.setOnMouseClicked(e -> {
+            //do saving file here
+            String selectedFile = getSelectedFile();
+            if(!selectedFile.isBlank())
+            {
+                FileOutputStream file = new FileOutputStream(selectedFile);
+                String text = txtInput.getText();
+                file.write(text);
+                file.close();
+            }
+        });
+        menuItemExit.setOnMouseClicked(e -> {
+            System.exit();
+        });
+
         btEncrypt.setOnMouseClicked(e -> {
             int shift = getShift(txtShift.getText()); //this return 1 if the text wasn't a number within 1-26
             //get the input text
@@ -58,7 +102,6 @@ public class EncryptionApplication extends Application {
             // This method allows for specific shifts or random shifts if no integer is given
             String output = encryptedText.encryptStringRandom(encryptedText.getString(), shift);
             txtOutput.setText(output);
-
         });
         btClear.setOnMouseClicked(e -> txtInput.clear());
         btDecrypt.setOnMouseClicked(e -> {
@@ -68,6 +111,7 @@ public class EncryptionApplication extends Application {
             String output = decryptedText.decryptStringRandom(decryptedText.getString(), shift);
             txtOutput.setText(output);
         });
+        btclear.setOnMouseClicked(new )
     }
 
     private boolean checkIfValid(String shiftText)
@@ -117,4 +161,18 @@ public class EncryptionApplication extends Application {
         return shift;
     }
 
+    public String getSelectedFile()
+    {
+        //https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java/40255184
+        String selectedFile = "";
+        JFileChooser file = new JFileChooser();
+        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(
+            "Text Files Only", "txt");
+        chooser.setFileFilter(txtFilter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            selectedFile = chooser.getSelectedFile().getName());
+        }
+        return selectedFile;
+    }
 }
