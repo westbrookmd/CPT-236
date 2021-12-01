@@ -64,6 +64,7 @@ public class EncryptionApplication extends Application {
         primaryStage.show(); // Display the stage
 
         //create event handlers
+        //TODO: save and load the shift value in addition to the input
         menuItemLoad.setOnMouseClicked(e -> {
             //do loading file here
             //input method (from example code in chapter 17.4)
@@ -95,7 +96,7 @@ public class EncryptionApplication extends Application {
         });
 
         btEncrypt.setOnMouseClicked(e -> {
-            int shift = getShift(txtShift.getText()); //this return 1 if the text wasn't a number within 1-26
+            int shift = getShift(txtShift.getText()); //this returns 1 if the text wasn't a number within 1-26
             //get the input text
             String textToEncrypt = txtInput.getText();
             EncryptString encryptedText = new EncryptString(textToEncrypt);
@@ -105,7 +106,7 @@ public class EncryptionApplication extends Application {
         });
         btClear.setOnMouseClicked(e -> txtInput.clear());
         btDecrypt.setOnMouseClicked(e -> {
-            int shift = getShift(txtShift.getText()); //this return 1 if the text wasn't a number within 1-26
+            int shift = getShift(txtShift.getText()); //this returns 1 if the text wasn't a number within 1-26
             String textToDecrypt = txtInput.getText();
             EncryptString decryptedText = new EncryptString(textToDecrypt);
             String output = decryptedText.decryptStringRandom(decryptedText.getString(), shift);
@@ -113,7 +114,6 @@ public class EncryptionApplication extends Application {
         });
         btclear.setOnMouseClicked(new )
     }
-
     private boolean checkIfValid(String shiftText)
     {
         boolean isValid = false;
@@ -124,29 +124,53 @@ public class EncryptionApplication extends Application {
                 isValid = true;
             }
             else{
-                displayAlert();
+                displayAlert("RANGE");
             }
         }
         catch(NumberFormatException e){
             isValid = false;
             //make sure the shift isn't the default blank value
             if(!(shiftText.isBlank())) {
-                displayAlert();
+                displayAlert("LETTER");
             }
         }
         return isValid;
     }
 
-    private void displayAlert() {
+    private void displayAlert(String value) {
         //create alert and explain the problem
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Check Shift Value");
-        alert.setHeaderText("Shift Not Within 1 - 26");
-        alert.setContentText("Verify that the shift value is a number greater than zero and less than 27.");
-        alert.showAndWait();
+        switch(value)
+        {
+            case "RANGE":
+                alert.setTitle("Check Shift Value");
+                alert.setHeaderText("Shift Not Within 1 - 26");
+                alert.setContentText("Verify that the shift value is a number greater than zero and less than 27.");
+                alert.showAndWait();
+                break;
+            case "LETTER":
+                alert.setTitle("Check Shift Value");
+                alert.setHeaderText("Shift Is Not a Number");
+                alert.setContentText("Your shift is not a number. Verify that the shift value is a number greater than zero and less than 27.");
+                alert.showAndWait();
+                break;
+            case "FILE":
+                alert.setTitle("Check File Selected");
+                alert.setHeaderText("File Not Selected Properly");
+                alert.setContentText("File selection instructions.");//TODO: add file instructions
+                alert.showAndWait();
+                break;
+            default:
+                alert.setTitle("Check Shift Value");
+                alert.setHeaderText("Shift Not Within 1 - 26");
+                alert.setContentText("Verify that the shift value is a number greater than zero and less than 27.");
+                alert.showAndWait();
+                break;
+        } 
     }
 
-    public int getShift(String shiftText)  //always calls checkIfValid
+
+    private int getShift(String shiftText)  //always calls checkIfValid
     {
         int shift = 1;
         if(checkIfValid(shiftText))
@@ -161,11 +185,12 @@ public class EncryptionApplication extends Application {
         return shift;
     }
 
-    public String getSelectedFile()
+    private String getSelectedFile()
     {
         //https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java/40255184
         String selectedFile = "";
-        try{
+        try
+        {
             JFileChooser file = new JFileChooser();
             FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(
                 "Text Files Only", "txt");
@@ -173,13 +198,12 @@ public class EncryptionApplication extends Application {
             int returnVal = chooser.showOpenDialog(null);
             if(returnVal == JFileChooser.APPROVE_OPTION) {
                 selectedFile = chooser.getSelectedFile().getAbsolutePath());
+            }
         }
         catch(Exception e)
         {
-            e.printStackTrace(System.out);
+            displayAlert("FILE");
         }
-        }
-        
         return selectedFile;
     }
 }
