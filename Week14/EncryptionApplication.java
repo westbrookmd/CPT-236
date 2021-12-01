@@ -1,7 +1,7 @@
-//TODO: add name
-
-//Marshall Westbrook
-//CPT236
+// Marshall Westbrook
+// Assignment 11
+// CPT-236-S44
+// Fall 2021
 // An Application that can encrypt and decrypt letters by utilizing event handlers
 // BONUS: Added the option to use a shift value between 1-26
 // BONUS2: Added a menubar with I/O support. Currently loading/saving input
@@ -15,16 +15,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-//TODO:add i/o import & JFileChooser import
 
 public class EncryptionApplication extends Application {
     @Override // Override the start method in the Application class
@@ -101,7 +96,7 @@ public class EncryptionApplication extends Application {
                     }
                     file.close();
                 }
-                catch(Exception ex)
+                catch(Exception ignored)
                 {
                 }
             }  
@@ -120,14 +115,12 @@ public class EncryptionApplication extends Application {
                 }
             }
 
-            catch(Exception ex)
+            catch(Exception ignored)
             {
 
             }
         });
-        menuItemExit.setOnAction(e -> {
-            System.exit(0);
-        });
+        menuItemExit.setOnAction(e -> System.exit(0));
 
         btEncrypt.setOnMouseClicked(e -> {
             int shift = getShift(txtShift.getText()); //this returns 1 if the text wasn't a number within 1-26
@@ -161,7 +154,6 @@ public class EncryptionApplication extends Application {
             }
         }
         catch(NumberFormatException e){
-            isValid = false;
             //make sure the shift isn't the default blank value
             if(!(shiftText.isBlank())) {
                 displayAlert("LETTER");
@@ -208,7 +200,7 @@ public class EncryptionApplication extends Application {
             try{
                 shift = Integer.parseInt(shiftText);
             }
-            catch(NumberFormatException e){
+            catch(NumberFormatException ignored){
 
             }
         }
