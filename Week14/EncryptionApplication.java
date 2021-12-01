@@ -1,3 +1,13 @@
+//TODO: add name
+
+//Marshall Westbrook
+//CPT236
+// An Application that can encrypt and decrypt letters by utilizing event handlers
+// BONUS: Added the option to use a shift value between 1-26
+// BONUS2: Added a menubar with I/O support. Currently loading/saving input
+// Could add shift value loading and saving later
+// BONUS3: Added error message handling and input validation (primarily for the shift value)
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -6,12 +16,27 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+//TODO:add i/o import & JFileChooser import
 
 public class EncryptionApplication extends Application {
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
+        //create a menu, add it to the main pane -> everything else is stored within the gridpane 
+        //(including the flowpane)
+        Pane mainPane = new Pane();
+        MenuBar menuBar = new MenuBar();
+        Menu menuFile = new Menu("File");
+        MenuItem menuItemLoad = new MenuItem("Load");
+        MenuItem menuItemSave = new MenuItem("Save");
+        MenuItem menuItemExit = new MenuItem("Exit");
+        menuFile.getItems().addAll(menuItemLoad, menuItemSave, menuItemExit);
+        menuBar.getChildren().addAll(menuFile);
+        mainPane.getChildren().add(menuBar);
+
         // Create a gridPane and set its properties
         GridPane gridPane = new GridPane();
+        //adding it to the main pane (with the menubar)
+        mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(5);
@@ -31,7 +56,7 @@ public class EncryptionApplication extends Application {
         Button btDecrypt = new Button("Decrypt");
         flowPane.getChildren().addAll(btEncrypt, txtShift, btClear, btDecrypt);
 
-        // Placing the flowpane and nodes in the gridPane
+        // Place the flowpane and nodes in the gridPane
         gridPane.add(new Label("Input Text:"), 0, 0);
         TextArea txtInput = new TextArea();
         txtInput.setPromptText("Input text here");
@@ -44,32 +69,61 @@ public class EncryptionApplication extends Application {
         gridPane.add(txtOutput, 0, 4);
 
         // Create a scene of the GridPane and place it in the stage
-        Scene scene = new Scene(gridPane);
-        primaryStage.setTitle("CPT 236 Encryption Application"); // Set the stage title
-        primaryStage.setScene(scene); // Place the scene in the stage
-        primaryStage.show(); // Display the stage
+        Scene scene = new Scene(mainPane);// this is to include the menubar without changing formatting
+        primaryStage.setTitle("CPT 236 Encryption Application"); 
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
         //create event handlers
+        //TODO: save and load the shift value in addition to the input
+        menuItemLoad.setOnMouseClicked(e -> {
+            //do loading file here
+            //input method (from example code in chapter 17.4)
+            String selectedFile = getSelectedFile();
+            if(!selectedFile.isBlank())
+            {
+                FileInputStream file = new FileInputStream(selectedFile);
+                int text;
+                while((text = file.read()) != -1)
+                {
+                    txtInput.setText(txtInput.getText() + text);
+                }
+                file.close();
+            }  
+        });
+        menuItemSave.setOnMouseClicked(e -> {
+            //do saving file here
+            String selectedFile = getSelectedFile();
+            if(!selectedFile.isBlank())
+            {
+                FileOutputStream file = new FileOutputStream(selectedFile);
+                String text = txtInput.getText();
+                file.write(text);
+                file.close();
+            }
+        });
+        menuItemExit.setOnMouseClicked(e -> {
+            System.exit();
+        });
+
         btEncrypt.setOnMouseClicked(e -> {
-            int shift = getShift(txtShift.getText()); //this return 1 if the text wasn't a number within 1-26
+            int shift = getShift(txtShift.getText()); //this returns 1 if the text wasn't a number within 1-26
             //get the input text
             String textToEncrypt = txtInput.getText();
             EncryptString encryptedText = new EncryptString(textToEncrypt);
             // This method allows for specific shifts or random shifts if no integer is given
             String output = encryptedText.encryptStringRandom(encryptedText.getString(), shift);
             txtOutput.setText(output);
-
         });
         btClear.setOnMouseClicked(e -> txtInput.clear());
         btDecrypt.setOnMouseClicked(e -> {
-            int shift = getShift(txtShift.getText()); //this return 1 if the text wasn't a number within 1-26
+            int shift = getShift(txtShift.getText()); //this returns 1 if the text wasn't a number within 1-26
             String textToDecrypt = txtInput.getText();
             EncryptString decryptedText = new EncryptString(textToDecrypt);
             String output = decryptedText.decryptStringRandom(decryptedText.getString(), shift);
             txtOutput.setText(output);
         });
     }
-
     private boolean checkIfValid(String shiftText)
     {
         boolean isValid = false;
@@ -80,29 +134,50 @@ public class EncryptionApplication extends Application {
                 isValid = true;
             }
             else{
-                displayAlert();
+                displayAlert("RANGE");
             }
         }
         catch(NumberFormatException e){
             isValid = false;
             //make sure the shift isn't the default blank value
             if(!(shiftText.isBlank())) {
-                displayAlert();
+                displayAlert("LETTER");
             }
         }
         return isValid;
     }
-
-    private void displayAlert() {
+    private void displayAlert(String value) {
         //create alert and explain the problem
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Check Shift Value");
-        alert.setHeaderText("Shift Not Within 1 - 26");
-        alert.setContentText("Verify that the shift value is a number greater than zero and less than 27.");
-        alert.showAndWait();
+        switch(value)
+        {
+            case "RANGE":
+                alert.setTitle("Check Shift Value");
+                alert.setHeaderText("Shift Not Within 1 - 26");
+                alert.setContentText("Verify that the shift value is a number greater than zero and less than 27.");
+                alert.showAndWait();
+                break;
+            case "LETTER":
+                alert.setTitle("Check Shift Value");
+                alert.setHeaderText("Shift Is Not a Number");
+                alert.setContentText("Your shift is not a number. Verify that the shift value is a number greater than zero and less than 27.");
+                alert.showAndWait();
+                break;
+            case "FILE":
+                alert.setTitle("Check File Selected");
+                alert.setHeaderText("File Not Selected Properly");
+                alert.setContentText("File selection instructions.");//TODO: add file instructions
+                alert.showAndWait();
+                break;
+            default:
+                alert.setTitle("Check Shift Value");
+                alert.setHeaderText("Shift Not Within 1 - 26");
+                alert.setContentText("Verify that the shift value is a number greater than zero and less than 27.");
+                alert.showAndWait();
+                break;
+        } 
     }
-
-    public int getShift(String shiftText)  //always calls checkIfValid
+    private int getShift(String shiftText)  //always calls checkIfValid
     {
         int shift = 1;
         if(checkIfValid(shiftText))
@@ -116,5 +191,26 @@ public class EncryptionApplication extends Application {
         }
         return shift;
     }
-
+    private String getSelectedFile()
+    {
+        //https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java/40255184
+        //I have used FileDialog before but wanted to try out JFileChooser
+        String selectedFile = "";
+        try
+        {
+            JFileChooser file = new JFileChooser();
+            FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(
+                "Text Files Only", "txt");
+            chooser.setFileFilter(txtFilter);
+            int returnVal = chooser.showOpenDialog(null);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                selectedFile = chooser.getSelectedFile().getAbsolutePath();
+            }
+        }
+        catch(Exception e)
+        {
+            displayAlert("FILE");
+        }
+        return selectedFile;
+    }
 }
