@@ -1,3 +1,5 @@
+//TODO: add name
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -197,7 +199,7 @@ public class EncryptionApplication extends Application {
             chooser.setFileFilter(txtFilter);
             int returnVal = chooser.showOpenDialog(null);
             if(returnVal == JFileChooser.APPROVE_OPTION) {
-                selectedFile = chooser.getSelectedFile().getAbsolutePath());
+                selectedFile = chooser.getSelectedFile().getAbsolutePath();
             }
         }
         catch(Exception e)
